@@ -1,6 +1,6 @@
 {
     "label": "なんちゃって虎の巻",
-    "position": 3,
+    "position": 4,
     "link": {
       "type": "generated-index",
       "description": "デバッグするときの手順やら、バグの原因になってるかもしれない設定などを解説したりします。"

@@ -242,10 +242,6 @@ const config: Config = {
               label: 'はじめに',
               to: '/IT-docs/intro',//内部リンクである場合はto:を使う
             },
-            {
-              label: '環境構築',
-              to: '/IT-docs/category/環境構築',
-            },
           ],
         },
         {
