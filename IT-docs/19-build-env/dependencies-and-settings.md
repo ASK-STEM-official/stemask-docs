@@ -1,120 +1,37 @@
 ---
-sidebar_position: 4
-description: 依存関係とか設定など
+sidebar_position: 1
+description: 環境を構築しよう
 ---
 
-# プロジェクトを作った後
+# 今回大会のレギュで環境構築をしよう
+今回大会ではVisualStudioを用いてデスクトップアプリケーションを構築します。
+今回の言語はC#です。MySQLWorkBenchは18回大会と変わらずです。18回大会のMySQLWOrkBenchのインストール手順を参照し、インストールをしてください。
 
-## 最初に作っておかないとまず動かないファイル
+## 利用するアプリケーション
+- VisualStudio 2022 Community
 
-何がどのような記述でどうなったのか愛をこめてコメントを添えておくのでそれでなんとか何してるか理解してください。一応きれいに解説したつもりです。実際にpom.xmlを作る場合は下に示したものを丸ごとコピペせず、Githubに置いてるテスト用プロジェクトを使ってください。
+ごく普通のフレームワークです。UIデザインをするデザイナーがありますが操作しづらいです。
+「.NETデスクトップ開発ワークロード」を使います
 
-# Pom.xml
+- MySQLWorkbench 8.0.36
 
-:::info
-pom.xmlとはMavenでどのライブラリを使用するかの宣言を行うファイルです。Project Object modelの頭文字をとっています。このファイル内でプロジェクトを動かす上で必要なものを書いているファイルだと思っておいてください。
-:::
+MySQLWorkbenchは18回大会と同様のものを利用していました。
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?><!-- エンコード方式とxmlバージョンの宣言 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.1</version>
-		<relativePath/> 
-	</parent>
-	
-	<groupId>com.example</groupId>    <!-- グループID-->
-	<artifactId>test</artifactId>    <!-- アーティファクトID -->
-	<version>0.0.1-SNAPSHOT</version>  <!-- バージョン宣言-->
-	<name>test</name>  <!-- 表示名 -->
-	<description>Demo project for Spring Boot</description>  <!--プロジェクトの説明の指定 -->
-	
-	<properties>  <!-- プロパティの指定-->
-		<java.version>20</java.version>  <!-- javaのバージョン宣言 -->
-	</properties>
-	
-	<dependencies>  <!-- 要素の列挙 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		
-		<dependency><!-- My_SQLの宣言-->
-			<groupId>com.mysql</groupId>
-			<artifactId>mysql-connector-j</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
-		</dependency>
-		
-		<!-- JSP サポート -->
-		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-jasper</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.glassfish.web</groupId>
-			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
-		</dependency>
-	</dependencies>
-	
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-					<mainClass>com.example.demo.TestApplication</mainClass>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-</project>
-			
-```
+- Draw.io
+
+ER図とかユースケース図とかを書くのに使えるソフトです。Wordも使えましたが正直こっちのが数倍楽です
+
+- Microsoft PowerPoint
+
+LibreOffice.orgはインストールされていましたがスタートメニューから一覧見るのが面倒でした。パワポ使おうぜパワポ
+
+## しょうもねえ情報
+- 大会問題はほとんどやっぱそのままでした
+- 今回大会ではネットワーク上に存在するデータベースにアクセスし、そこにすでにスキーマがありました
+- USBメモリを用いて提出せずに、ネットワークに存在するストレージへアクセスするbatファイルが提供されていました
+- ほとんどの選手がキーボード持ち込んでました。マウスは人それぞれ。使ったノーパソはDynabookです。
+-  MicrosoftOfficeがデフォルトでインストールされているモデルでした。普通にoffice使わせてもらえた
+- 時計は前に置いてあったんで持ってくる必要はないかと
+- ~~お弁当で胃もたれしました~~
+- CDとかDVDが同封されてる本を持ち込みできないよ
+- ネット使えました。だから拡張機能も入れれたよ

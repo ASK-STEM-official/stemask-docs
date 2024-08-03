@@ -12,6 +12,7 @@ sidebar_position: 1
 - eclipseに興味がある人・Webアプリケーションに興味がある人
 - SQLやDBに興味がある人
 - Javaアプリケーションに興味がある人
+- C#WindowsFormアプリケーションに興味がある人
 
 ## 前提条件
 
