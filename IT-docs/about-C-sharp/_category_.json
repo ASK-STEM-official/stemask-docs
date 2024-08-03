@@ -1,9 +1,9 @@
 {
     "label": "C#関連",
     "position": 5,
-    "link": {
+    "link": 
+    {
       "type": "generated-index",
       "description": "Javaから唐突にC#を書くのも楽しいよ"
     }
-  }
-  
+}
