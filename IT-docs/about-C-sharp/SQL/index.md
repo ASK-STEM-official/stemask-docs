@@ -60,4 +60,3 @@ string connectionString = "server=localhost;database=mydatabase;user=root;passwo
 ![VisualStudio 2022](./images/1.jpg)
 
 このように「ok」と表示されれば成功
-
