@@ -342,4 +342,51 @@ namespace shift_making_man.Models
 }
 
 ```
-こっちはDateTime型を使うためにSystemのusing宣言が必要です。
+こっちはDateTime型を使うためにSystemのusing宣言が必要です。(n敗)
+string型とint型なら何もなくても動作するのでそのノリで書いたら怒られた。
+
+### Models/Shift.cs
+Shiftテーブルと対応するデータアクセス層
+```csharp
+using System;
+
+namespace shift_making_man.Models
+{
+    public class Shift
+    {
+        public int ShiftID { get; set; }
+        public int? StaffID { get; set; }
+        public DateTime ShiftDate { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+        public int Status { get; set; }
+        public int? StoreID { get; set; }
+
+        public Staff Staff { get; set; }
+    }
+}
+```
+### Models/ShiftRequest.cs
+ShiftRequestテーブルと対応するデータアクセス層
+```csharp
+using System;
+
+namespace shift_making_man.Models
+{
+    public class ShiftRequest
+    {
+        public int RequestID { get; set; }
+        public int StoreID { get; set; }
+        public int? StaffID { get; set; }
+        public int? OriginalShiftID { get; set; }
+        public DateTime RequestDate { get; set; }
+        public int Status { get; set; } 
+        public DateTime? RequestedShiftDate { get; set; }
+        public TimeSpan? RequestedStartTime { get; set; }
+        public TimeSpan? RequestedEndTime { get; set; }
+    }
+}
+
+```
+
+データ型の後についてる「?」はNullである場合を示すやつ。OriginalShiftIDはNullを許容するのは、OriginalShiftIDがNullの場合は新規作成、何らかの値がある場合はShiftテーブルを参照してシフトの変更を行うことができると理解できるが、StaffIDがNullである必要性とは????となってると思う。これは
