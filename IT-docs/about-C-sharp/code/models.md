@@ -132,5 +132,5 @@ namespace shift_making_man.Models
         public int BusyStaffCount { get; set; }
     }
 }
-
 ```
+Storeテーブルは大会側が提示してない大友内装(粒)オリジナルのテーブル。まあでもStoreとか魔改造済みなんですけども。TimeSpan型は時間の開始時間と終了時間を割り当てるときに便利な型。
