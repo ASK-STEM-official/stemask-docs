@@ -1,9 +1,9 @@
 ---
 sidebar_position: 1
-description: 大会前に書いてたコード解説
+description: 19回大会前に書いてたコード解説
 ---
 
-# 大会前に書いてたコードの解説
+# 19回大会前に書いてたコードの解説
 
 ## ファイル構造
 ```
@@ -47,346 +47,44 @@ shift_making_man
             - ShiftListForm.cs
             - ShiftSchedulerForm.cs
 ```
+見ての通り構造化しまくって将来的な拡張性を重視した設計をした。というか、やりすぎ。
 
-## コード解説
-### Proglam.cs
-コード全文
-```csharp
-using System;
-using System.Windows.Forms;
-using Microsoft.Extensions.DependencyInjection;
-using shift_making_man.Controllers;
-using shift_making_man.Controllers.ShiftServices;
-using shift_making_man.Data;
-using shift_making_man.Views;
+## 設計の方針
+- コードの保守の面からセキュリティ気にしたらこうなっちゃった
+保守の面から考えて、コードの役割分担するだけでエラーを追っかけやすくなるしどこが問題起こしてるか分かりやすいですよって言えばセキュリティの問題が発生した際の対応がやりやすいって言えると思った。大会本番に提示された資料として管理者からのヒアリングが追加されててそこに「個人情報扱うしセキュリティとか気にしてほしいな(要約)」っていうのも記載されてたのでMVC狂信者になって売り込み文句を書いてた。変更点が全体に響くわけではないので心臓にやさしいって言いたかった。ユニットテストはできるよ…ほんとだよ…
 
-namespace shift_making_man
-{
-    static class Program
-    {
-        [STAThread]
-        static void Main()
-        {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            var serviceProvider = ConfigureServices();
-            Application.Run(serviceProvider.GetRequiredService<LoginForm>());
-        }
+- 将来的に機能拡張を想定してコードの拡張性を与えたかった
+将来的に店舗の拡張や従業員の増加などに備えて変更する部分を最小限に、追加する際に動いてるコードに悪さしないように責任分担させれば安心安全に機能追加できるし、変更点も最小限に抑えられるからリリース早くなるぜって言ったらいいよってマーケティングの本に書いてあったからパクった
 
-        private static IServiceProvider ConfigureServices()
-        {
-            var services = new ServiceCollection();
+- コードの可読性をあげたかった
+コードの可読性あげればさぁ…コード読みやすいじゃんかって思ったんですよ。機能追加がホイホイ行われるだろうし下手に1つにまとめて難読化するよりも構造化して読みやすくしてあげた方が優しいじゃないですかって思ったんですよ
 
-            // データアクセスオブジェクトの登録
-            services.AddSingleton<IAdminDataAccess, AdminDataAccess>()
-                    .AddSingleton<IShiftDataAccess>(provider =>
-                        new ShiftDataAccess("server=localhost;database=19demo;user=root;password=")) 
-                    .AddSingleton<IStaffDataAccess, StaffDataAccess>()
-                    .AddSingleton<IStoreDataAccess, StoreDataAccess>()
-                    .AddSingleton<IShiftRequestDataAccess, ShiftRequestDataAccess>();
+## 方針通りに実装した結果がこれだよ!!!
+### 徹底した機能別のクラス設計
+なんかファイル名やらフォルダ名から察せる通り、命がけのMVC設計してます。そんな大規模システムじゃねえのに何してんだろう…一応ファイル名とフォルダ名からどういう機能が実装されてるか分かりやすくしたり、機能ごとに分けておくことで管理・デバッグ・機能追加・引継ぎで楽なことしかないので理にかなってます本当です
 
-            // サービスの登録
-            services.AddSingleton<ShiftValidationService>(provider =>
-                new ShiftValidationService(
-                    provider.GetRequiredService<IStoreDataAccess>(),
-                    provider.GetRequiredService<IShiftDataAccess>(),
-                    provider.GetRequiredService<IStaffDataAccess>()
-                ))
-                .AddSingleton<ShiftCreationService>(provider =>
-                    new ShiftCreationService(
-                        provider.GetRequiredService<IStoreDataAccess>(),
-                        provider.GetRequiredService<IStaffDataAccess>(),
-                        provider.GetRequiredService<IShiftDataAccess>(),
-                        provider.GetRequiredService<IShiftRequestDataAccess>(),
-                        provider.GetRequiredService<ShiftValidationService>(),
-                        provider.GetRequiredService<ShiftOptimizationService>()
-                    ))
-                .AddSingleton<ShiftOptimizationService>()
-                .AddSingleton<ShiftModificationService>();
+### 徹底した機能別設計によってデータの安全性もついでに保証
+下手にクエリを直書きしてないので事故が起きないようにしてある。そのためにコントローラークラスあるようなもの。
 
-            // DataAccessFacadeの登録
-            services.AddSingleton<DataAccessFacade>(provider =>
-                new DataAccessFacade(
-                    provider.GetRequiredService<IAdminDataAccess>(),
-                    provider.GetRequiredService<IShiftDataAccess>(),
-                    provider.GetRequiredService<IStaffDataAccess>(),
-                    provider.GetRequiredService<IStoreDataAccess>(),
-                    provider.GetRequiredService<IShiftRequestDataAccess>(),
-                    provider.GetRequiredService<ShiftCreationService>(),
-                    provider.GetRequiredService<ShiftValidationService>(),
-                    provider.GetRequiredService<ShiftOptimizationService>(),
-                    provider.GetRequiredService<ShiftModificationService>()
-                ));
+## データベースにアクセスするのにどんな手順通ってるの?
+データベースにアクセスしてデータ持ってくるのに手順を踏んでいるのでそれの解説
+### 1.依存性の注入
+使いたいテーブルに合わせてインターフェースをコンストラクタでコントローラーに注入する。
+インターフェースは「I(テーブル名)DataAccess.cs」っていうファイル名になってるやつ。
+:::info
+ここでいう「インターフェース」はモデルとクラスを中継するためのものです。
+:::
 
-            // コントローラの登録
-            services.AddSingleton<ShiftSchedulerController>(provider =>
-                new ShiftSchedulerController(
-                    provider.GetRequiredService<ShiftCreationService>(),
-                    provider.GetRequiredService<ShiftModificationService>(),
-                    provider.GetRequiredService<ShiftValidationService>(),
-                    provider.GetRequiredService<ShiftOptimizationService>(),
-                    provider.GetRequiredService<IStoreDataAccess>(),
-                    provider.GetRequiredService<IShiftDataAccess>()
-                ));
+### 2.I(テーブル名)DataAccessメゾットを呼び出す
+実際のコードを見ればわかるかと思いますが、コントローラーでひたすらに「Iテーブル名DataAccess」インターフェースにあるメゾット呼び出しをしてるのでそれを元に「テーブル名DataAccess」にある紐づいているクラスを実行する。モックテストしやすい構造にしてる上、インターフェース側でコメントアウトすればクラスも動かないデバッグへのぬくもり
 
-            // フォームの登録
-            services.AddTransient<LoginForm>()
-                    .AddTransient<MainForm>(provider =>
-                        new MainForm(provider.GetRequiredService<DataAccessFacade>()))
-                    .AddTransient<DashboardForm>(provider =>
-                        new DashboardForm(provider.GetRequiredService<DataAccessFacade>()))
-                    .AddTransient<ShiftSchedulerForm>(provider =>
-                        new ShiftSchedulerForm(
-                            provider.GetRequiredService<ShiftSchedulerController>()
-                        ));
+### 呼び出されたクラスを元にモデルのオブジェクトを変更する
+クラスごとに、削除や条件検索、変更などを割り当ててあるのでそれを実行する。フォームでユーザーが入力したり、アルゴリズムの実行中に存在する変数なんかの値を元にデータを取れるのでクエリを大量に書かずに済んだ。接続文を省略してないのは単純にガバ
 
-            return services.BuildServiceProvider();
-        }
-    }
-}
+:::info
+Springにあったアプリケーションプロパティとして全体に指定してくれるファイルが見当たらなくてどうしようもなかった接続文省略要素。あれ…Springだと標準実装じゃなかったっけ…
+Spring Data JPAを使えばリポジトリインターフェース作ってメゾット名によるクエリ自動生成がある程度効く上にカスタムクエリも作成できる素敵機能がある。しかも何なら今回の操作は9割方メゾット名クエリ自動生成が効くものだったので何度も「Spring使える環境を返して…」ってしながらコードを書いてた。
+:::
 
-```
-#### Mainメゾット
-Mainメゾットはアプリケーションの開始地点です。
-
-```csharp
-static void Main()
-{
-    Application.EnableVisualStyles();
-    Application.SetCompatibleTextRenderingDefault(false);
-    var serviceProvider = ConfigureServices();
-    Application.Run(serviceProvider.GetRequiredService<LoginForm>());
-}
-```
-下に示す部分ではアプリケーションの見た目を設定するための構文です。
-```csharp
-    Application.EnableVisualStyles();
-    Application.SetCompatibleTextRenderingDefault(false);
-```
-サービスプロバイダーとして`var serviceProvider = ConfigureServices();`メゾットを呼び出してます
-```csharp
-var serviceProvider = ConfigureServices();
-```
-最後に`LoginForm`を表示してアプリケーションを開始します
-```csharp
-    Application.Run(serviceProvider.GetRequiredService<LoginForm>());
-```
-
-#### ConfigureServices メソッド
-```csharp
-private static IServiceProvider ConfigureServices()
-{
-    var services = new ServiceCollection();
-
-    // データアクセスオブジェクトの登録
-    services.AddSingleton<IAdminDataAccess, AdminDataAccess>()
-            .AddSingleton<IShiftDataAccess>(provider =>
-                new ShiftDataAccess("server=localhost;database=19demo;user=root;password=")) 
-            .AddSingleton<IStaffDataAccess, StaffDataAccess>()
-            .AddSingleton<IStoreDataAccess, StoreDataAccess>()
-            .AddSingleton<IShiftRequestDataAccess, ShiftRequestDataAccess>();
-
-    // サービスの登録
-    services.AddSingleton<ShiftValidationService>(provider =>
-        new ShiftValidationService(
-            provider.GetRequiredService<IStoreDataAccess>(),
-            provider.GetRequiredService<IShiftDataAccess>(),
-            provider.GetRequiredService<IStaffDataAccess>()
-        ))
-        .AddSingleton<ShiftCreationService>(provider =>
-            new ShiftCreationService(
-                provider.GetRequiredService<IStoreDataAccess>(),
-                provider.GetRequiredService<IStaffDataAccess>(),
-                provider.GetRequiredService<IShiftDataAccess>(),
-                provider.GetRequiredService<IShiftRequestDataAccess>(),
-                provider.GetRequiredService<ShiftValidationService>(),
-                provider.GetRequiredService<ShiftOptimizationService>()
-            ))
-        .AddSingleton<ShiftOptimizationService>()
-        .AddSingleton<ShiftModificationService>();
-
-    // DataAccessFacadeの登録
-    services.AddSingleton<DataAccessFacade>(provider =>
-        new DataAccessFacade(
-            provider.GetRequiredService<IAdminDataAccess>(),
-            provider.GetRequiredService<IShiftDataAccess>(),
-            provider.GetRequiredService<IStaffDataAccess>(),
-            provider.GetRequiredService<IStoreDataAccess>(),
-            provider.GetRequiredService<IShiftRequestDataAccess>(),
-            provider.GetRequiredService<ShiftCreationService>(),
-            provider.GetRequiredService<ShiftValidationService>(),
-            provider.GetRequiredService<ShiftOptimizationService>(),
-            provider.GetRequiredService<ShiftModificationService>()
-        ));
-
-    // コントローラの登録
-    services.AddSingleton<ShiftSchedulerController>(provider =>
-        new ShiftSchedulerController(
-            provider.GetRequiredService<ShiftCreationService>(),
-            provider.GetRequiredService<ShiftModificationService>(),
-            provider.GetRequiredService<ShiftValidationService>(),
-            provider.GetRequiredService<ShiftOptimizationService>(),
-            provider.GetRequiredService<IStoreDataAccess>(),
-            provider.GetRequiredService<IShiftDataAccess>()
-        ));
-
-    // フォームの登録
-    services.AddTransient<LoginForm>()
-            .AddTransient<MainForm>(provider =>
-                new MainForm(provider.GetRequiredService<DataAccessFacade>()))
-            .AddTransient<DashboardForm>(provider =>
-                new DashboardForm(provider.GetRequiredService<DataAccessFacade>()))
-            .AddTransient<ShiftSchedulerForm>(provider =>
-                new ShiftSchedulerForm(
-                    provider.GetRequiredService<ShiftSchedulerController>()
-                ));
-
-    return services.BuildServiceProvider();
-}
-```
-データアクセスオブジェクトを登録し、サービスを登録し、DataAccessFacadeを複数のデータアクセスオブジェクトをまとめて扱うオブジェクトを登録して、コントローラ、及びフォームを登録しまくるところです。ダイエットできた気がしてきてる
-
-### DataAccessFacade.cs
-```csharp
-using shift_making_man.Controllers.ShiftServices;
-
-namespace shift_making_man.Data
-{
-    public class DataAccessFacade
-    {
-        public IAdminDataAccess AdminDataAccess { get; }
-        public IShiftDataAccess ShiftDataAccess { get; }
-        public IStaffDataAccess StaffDataAccess { get; }
-        public IAttendanceDataAccess AttendanceDataAccess { get; }
-        public IStoreDataAccess StoreDataAccess { get; }
-        public IShiftRequestDataAccess ShiftRequestDataAccess { get; }
-        public ShiftCreationService ShiftCreationService { get; }
-        public ShiftValidationService ShiftValidationService { get; }
-        public ShiftOptimizationService ShiftOptimizationService { get; }
-        public ShiftModificationService ShiftModificationService { get; }
-
-        public DataAccessFacade(
-            IAdminDataAccess adminDataAccess,
-            IShiftDataAccess shiftDataAccess,
-            IStaffDataAccess staffDataAccess,
-            IAttendanceDataAccess attendanceDataAccess,
-            IStoreDataAccess storeDataAccess,
-            IShiftRequestDataAccess shiftRequestDataAccess,
-            ShiftCreationService shiftCreationService,
-            ShiftValidationService shiftValidationService,
-            ShiftOptimizationService shiftOptimizationService,
-            ShiftModificationService shiftModificationService)
-        {
-            AdminDataAccess = adminDataAccess;
-            ShiftDataAccess = shiftDataAccess;
-            StaffDataAccess = staffDataAccess;
-            AttendanceDataAccess = attendanceDataAccess;
-            StoreDataAccess = storeDataAccess;
-            ShiftRequestDataAccess = shiftRequestDataAccess;
-            ShiftCreationService = shiftCreationService;
-            ShiftValidationService = shiftValidationService;
-            ShiftOptimizationService = shiftOptimizationService;
-            ShiftModificationService = shiftModificationService;
-        }
-
-        public DataAccessFacade(IAdminDataAccess adminDataAccess, IShiftDataAccess shiftDataAccess, IStaffDataAccess staffDataAccess, IStoreDataAccess storeDataAccess, IShiftRequestDataAccess shiftRequestDataAccess, ShiftCreationService shiftCreationService, ShiftValidationService shiftValidationService, ShiftOptimizationService shiftOptimizationService, ShiftModificationService shiftModificationService)
-        {
-            AdminDataAccess = adminDataAccess;
-            ShiftDataAccess = shiftDataAccess;
-            StaffDataAccess = staffDataAccess;
-            StoreDataAccess = storeDataAccess;
-            ShiftRequestDataAccess = shiftRequestDataAccess;
-            ShiftCreationService = shiftCreationService;
-            ShiftValidationService = shiftValidationService;
-            ShiftOptimizationService = shiftOptimizationService;
-            ShiftModificationService = shiftModificationService;
-        }
-    }
-}
-
-```
-データアクセスオブジェクトやらサービスのインスタンスを保持するプロパティコンストラクタが2つあるのはIAttendanceDataAccessがあるやつとないやつで分けちゃったから。ダイエットできるよねポイント高い部分。サブシステムが多くて心が折れたので保守性を高めるためにもファサードにまとめてみた。
-
-### Models/Admin.cs
-Adminテーブルと対応するデータアクセス層
-```csharp
-namespace shift_making_man.Models
-{
-    public class Admin
-    {
-        public int AdminID { get; set; }
-        public string Username { get; set; }
-        public string PasswordHash { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
-    }
-}
-```
-文字型のところをカラムと対応させて変えてね。
-
-### Models/Attendance.cs
-Attendanceテーブルと対応するデータアクセス層
-```csharp
-using System;
-
-namespace shift_making_man.Models
-{
-    public class Attendance
-    {
-        public int AttendanceID { get; set; }
-        public int? StaffID { get; set; } 
-        public int? ShiftID { get; set; }
-        public DateTime CheckInTime { get; set; }
-        public DateTime? CheckOutTime { get; set; }
-    }
-}
-
-```
-こっちはDateTime型を使うためにSystemのusing宣言が必要です。(n敗)
-string型とint型なら何もなくても動作するのでそのノリで書いたら怒られた。
-
-### Models/Shift.cs
-Shiftテーブルと対応するデータアクセス層
-```csharp
-using System;
-
-namespace shift_making_man.Models
-{
-    public class Shift
-    {
-        public int ShiftID { get; set; }
-        public int? StaffID { get; set; }
-        public DateTime ShiftDate { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
-        public int Status { get; set; }
-        public int? StoreID { get; set; }
-
-        public Staff Staff { get; set; }
-    }
-}
-```
-### Models/ShiftRequest.cs
-ShiftRequestテーブルと対応するデータアクセス層
-```csharp
-using System;
-
-namespace shift_making_man.Models
-{
-    public class ShiftRequest
-    {
-        public int RequestID { get; set; }
-        public int StoreID { get; set; }
-        public int? StaffID { get; set; }
-        public int? OriginalShiftID { get; set; }
-        public DateTime RequestDate { get; set; }
-        public int Status { get; set; } 
-        public DateTime? RequestedShiftDate { get; set; }
-        public TimeSpan? RequestedStartTime { get; set; }
-        public TimeSpan? RequestedEndTime { get; set; }
-    }
-}
-
-```
-
-データ型の後についてる「?」はNullである場合を示すやつ。OriginalShiftIDはNullを許容するのは、OriginalShiftIDがNullの場合は新規作成、何らかの値がある場合はShiftテーブルを参照してシフトの変更を行うことができると理解できるが、StaffIDがNullである必要性とは????となってると思う。これは
+### モデルを経由してテーブルからデータを取得・変更を行う
+モデルではテーブルのデータ型に合わせて取得するデータはこういうデータ型だと教えてあげる存在です。データベースにアクセスしてデータを取得する際、「プログラムで扱うときのデータ型はこれだ」と定義してやる存在です。ゴリゴリにMVC設計してるので詳しいことは別の場所でしっかり説明します。
