@@ -81,7 +81,7 @@ public interface IShiftDataAccess
     //void UpdateShiftRequest(ShiftRequest request);
 }
 ```
-度重なる仕様変更の荒らしに揉まれて大量の要らないメゾットができた弊害でとんでもないことになっているインターフェース。
+度重なる仕様変更の荒らしに揉まれて大量の要らないメゾットができた弊害でコメントアウトしたメゾットがとんでもないことになっているインターフェース。
 ```Csharp
 void SaveShift(Shift shift);
 void SaveShiftList(List<Shift> shifts);
@@ -132,5 +132,73 @@ StoreIDを元にリストを検索するやつ。最初これを条件式にフ�
 ```csharp
  List<ShiftRequest> GetPendingRequests();
 ```
-保留にしてる(Status=0)の値を取得してリストにして渡すメゾットこれでよかったんだよこれで…誰だよ複雑な内容書きしたためたの
+保留にしてる(Status=0)の値を取得してリストにして渡すメゾットこれでよかったんだよこれで…誰だよ複雑な内容書きしたためたあんぽんたんは
 
+## Interfaces/IStaffRequestDataAccess.cs
+```csharp
+using shift_making_man.Models;
+using System.Collections.Generic;
+using System;
+
+namespace shift_making_man.Data
+{
+    public interface IStaffDataAccess
+    {
+        List<Staff> GetStaff();
+        Staff GetStaffById(int staffId);
+        //void AddStaff(Staff staff);
+        //void UpdateStaff(Staff staff);
+        //void DeleteStaff(int staffId);
+
+        //bool IsFullTimeAvailable(DateTime shiftDate, TimeSpan startTime, TimeSpan endTime);
+        List<Staff> GetStaffByStoreId(int storeId);
+        List<Staff> GetStaffByEmploymentType(string employmentType); 
+    }
+}
+```
+
+### メゾット説明
+```csharp
+List<Staff> GetStaff();
+```
+見ての通りスタッフリストを連れてくるやつ。従業員一覧とかの実装で使うから作成してある。
+
+```csharp
+Staff GetStaffById(int staffId);
+```
+シフトリクエストテーブル関連。StaffIDでスタッフを取得するためのメゾット。
+
+```csharp
+List<Staff> GetStaffByStoreId(int storeId);
+List<Staff> GetStaffByEmploymentType(string employmentType); 
+```
+`GetStaffByStoreId`はユーザーの指定したStoreIDをもとにShiftRequestテーブルを検索して、そこに紐づくStaffを連れてくるメゾット。そして、`GetStaffByEmploymentType`は、シフト作成時に就業形態について取得するためのメゾットである。
+
+## Interfaces/IStaffRequestDataAccess.cs
+```csharp
+using shift_making_man.Models;
+using System.Collections.Generic;
+
+namespace shift_making_man.Data
+{
+    public interface IStoreDataAccess
+    {
+        List<Store> GetStores();
+        Store GetStoreById(int storeId);
+        //TimeSpan GetStoreOpenTime(int storeId);
+        //TimeSpan GetStoreCloseTime(int storeId);
+        //void AddStore(Store store);
+        //void UpdateStore(Store store);
+        //void DeleteStore(int storeId);
+    }
+}
+```
+### メゾット説明
+```csharp
+List<Store> GetStores();
+```
+Storeテーブルを検索してすべて出すコード。店舗設定確認用。
+```csharp
+Store GetStoreById(int storeId);
+```
+ユーザの指定したStoreIDから店舗を特定してその店舗の設定を出力するメゾット。シフト作成時の制約として。
