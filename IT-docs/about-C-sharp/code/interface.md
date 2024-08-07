@@ -174,7 +174,7 @@ List<Staff> GetStaffByEmploymentType(string employmentType);
 ```
 `GetStaffByStoreId`はユーザーの指定したStoreIDをもとにShiftRequestテーブルを検索して、そこに紐づくStaffを連れてくるメゾット。そして、`GetStaffByEmploymentType`は、シフト作成時に就業形態について取得するためのメゾットである。
 
-## Interfaces/IStaffRequestDataAccess.cs
+## Interfaces/IStoreDataAccess.cs
 ```csharp
 using shift_making_man.Models;
 using System.Collections.Generic;
