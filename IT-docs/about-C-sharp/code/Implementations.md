@@ -521,6 +521,7 @@ namespace shift_making_man.Data
     {
         private readonly string connectionString = "server=localhost;database=19demo;user=root;password=;";
 
+        // Storeオブジェクトを全取得
         public List<Store> GetStores()
         {
             List<Store> stores = new List<Store>();
@@ -542,98 +543,7 @@ namespace shift_making_man.Data
                                 CloseTime = rdr.GetTimeSpan(rdr.GetOrdinal("CloseTime")),
                                 BusyTimeStart = rdr.GetTimeSpan(rdr.GetOrdinal("BusyTimeStart")),
                                 BusyTimeEnd = rdr.GetTimeSpan(rdr.GetOrdinal("BusyTimeEnd")),
-                                                               try
-                                {
-                                    using (MySqlConnection conn = new MySqlConnection(connectionString))
-                                    {
-                                        // 接続を開く
-                                        conn.Open();
-                                        // SQLクエリを定義
-                                        string sql = "SELECT * FROM store";
-                                        // コマンドを作成
-                                        MySqlCommand cmd = new MySqlCommand(sql, conn);
-                                        // データリーダーを使用してクエリの結果を読み取る
-                                        using (MySqlDataReader rdr = cmd.ExecuteReader())
-                                        {
-                                            // 結果を1行ずつ読み取る
-                                            while (rdr.Read())
-                                            {
-                                                // Storeオブジェクトを作成し、リストに追加
-                                                stores.Add(new Store
-                                                {
-                                                    StoreID = rdr.GetInt32("StoreID"),
-                                                    OpenTime = rdr.GetTimeSpan(rdr.GetOrdinal("OpenTime")),
-                                                    CloseTime = rdr.GetTimeSpan(rdr.GetOrdinal("CloseTime")),
-                                                    BusyTimeStart = rdr.GetTimeSpan(rdr.GetOrdinal("BusyTimeStart")),
-                                                    BusyTimeEnd = rdr.GetTimeSpan(rdr.GetOrdinal("BusyTimeEnd")),
-                                                    NormalStaffCount = rdr.GetInt32("NormalStaffCount"),
-                                                    BusyStaffCount = rdr.GetInt32("BusyStaffCount")
-                                                });
-                                            }
-                                        }
-                                    }
-                                }
-                                catch (MySqlException ex)
-                                {
-                                    // MySQLエラーをキャッチして表示
-                                    Console.WriteLine($"MySQLエラー: {ex.Message}");
-                                }
-                                catch (FormatException ex)
-                                {
-                                    // TimeSpan変換エラーをキャッチして表示
-                                    Console.WriteLine($"TimeSpan変換エラー: {ex.Message}");
-                                }
-                                return stores;
-                                }
-                                
-                                public Store GetStoreById(int storeId)
-                                {
-                                    Store store = null;
-                                    try
-                                    {
-                                        using (MySqlConnection conn = new MySqlConnection(connectionString))
-                                        {
-                                            // 接続を開く
-                                            conn.Open();
-                                            // SQLクエリを定義
-                                            string sql = "SELECT * FROM store WHERE StoreID = @StoreID";
-                                            // コマンドを作成
-                                            MySqlCommand cmd = new MySqlCommand(sql, conn);
-                                            // パラメータを追加
-                                            cmd.Parameters.AddWithValue("@StoreID", storeId);
-                                            // データリーダーを使用してクエリの結果を読み取る
-                                            using (MySqlDataReader rdr = cmd.ExecuteReader())
-                                            {
-                                                // 結果が存在する場合
-                                                if (rdr.Read())
-                                                {
-                                                    // Storeオブジェクトを作成
-                                                    store = new Store
-                                                    {
-                                                        StoreID = rdr.GetInt32("StoreID"),
-                                                        OpenTime = rdr.GetTimeSpan(rdr.GetOrdinal("OpenTime")),
-                                                        CloseTime = rdr.GetTimeSpan(rdr.GetOrdinal("CloseTime")),
-                                                        BusyTimeStart = rdr.GetTimeSpan(rdr.GetOrdinal("BusyTimeStart")),
-                                                        BusyTimeEnd = rdr.GetTimeSpan(rdr.GetOrdinal("BusyTimeEnd")),
-                                                        NormalStaffCount = rdr.GetInt32("NormalStaffCount"),
-                                                        BusyStaffCount = rdr.GetInt32("BusyStaffCount")
-                                                    };
-                                                }
-                                            }
-                                        }
-                                    }
-                                    catch (MySqlException ex)
-                                    {
-                                        // MySQLエラーをキャッチして表示
-                                        Console.WriteLine($"MySQLエラー: {ex.Message}");
-                                    }
-                                    catch (FormatException ex)
-                                    {
-                                        // TimeSpan変換エラーをキャッチして表示
-                                        Console.WriteLine($"TimeSpan変換エラー: {ex.Message}");
-                                    }
-                                    return store;
-                                } NormalStaffCount = rdr.GetInt32("NormalStaffCount"),
+                                NormalStaffCount = rdr.GetInt32("NormalStaffCount"),
                                 BusyStaffCount = rdr.GetInt32("BusyStaffCount")
                             });
                         }
@@ -651,9 +561,9 @@ namespace shift_making_man.Data
             return stores;
         }
 
+        // ID絞り込み
         public Store GetStoreById(int storeId)
         {
-            // Store
             Store store = null;
             try
             {
@@ -661,70 +571,7 @@ namespace shift_making_man.Data
                 {
                     conn.Open();
                     string sql = "SELECT * FROM store WHERE StoreID = @StoreID";
-                    MySqlCommand cmd =                     catch (MySqlException ex)
-                    {
-                        // MySQLエラーをキャッチして表示
-                        Console.WriteLine($"MySQLエラー: {ex.Message}");
-                    }
-                    catch (FormatException ex)
-                    {
-                        // TimeSpan変換エラーをキャッチして表示
-                        Console.WriteLine($"TimeSpan変換エラー: {ex.Message}");
-                    }
-                    // storesリストを返す
-                    return stores;
-                    }
-                    
-                    public Store GetStoreById(int storeId)
-                    {
-                        // Storeオブジェクトの初期化
-                        Store store = null;
-                        try
-                        {
-                            using (MySqlConnection conn = new MySqlConnection(connectionString))
-                            {
-                                // 接続を開く
-                                conn.Open();
-                                // SQLクエリを定義
-                                string sql = "SELECT * FROM store WHERE StoreID = @StoreID";
-                                // コマンドを作成
-                                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                                // パラメータを追加
-                                cmd.Parameters.AddWithValue("@StoreID", storeId);
-                                // データリーダーを使用してクエリの結果を読み取る
-                                using (MySqlDataReader rdr = cmd.ExecuteReader())
-                                {
-                                    // 結果が存在する場合
-                                    if (rdr.Read())
-                                    {
-                                        // Storeオブジェクトを作成
-                                        store = new Store
-                                        {
-                                            StoreID = rdr.GetInt32("StoreID"),
-                                            OpenTime = rdr.GetTimeSpan(rdr.GetOrdinal("OpenTime")),
-                                            CloseTime = rdr.GetTimeSpan(rdr.GetOrdinal("CloseTime")),
-                                            BusyTimeStart = rdr.GetTimeSpan(rdr.GetOrdinal("BusyTimeStart")),
-                                            BusyTimeEnd = rdr.GetTimeSpan(rdr.GetOrdinal("BusyTimeEnd")),
-                                            NormalStaffCount = rdr.GetInt32("NormalStaffCount"),
-                                            BusyStaffCount = rdr.GetInt32("BusyStaffCount")
-                                        };
-                                    }
-                                }
-                            }
-                        }
-                        catch (MySqlException ex)
-                        {
-                            // MySQLエラーをキャッチして表示
-                            Console.WriteLine($"MySQLエラー: {ex.Message}");
-                        }
-                        catch (FormatException ex)
-                        {
-                            // TimeSpan変換エラーをキャッチして表示
-                            Console.WriteLine($"TimeSpan変換エラー: {ex.Message}");
-                        }
-                        // storeオブジェクトを返す
-                        return store;
-                    }new MySqlCommand(sql, conn);
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@StoreID", storeId);
                     using (MySqlDataReader rdr = cmd.ExecuteReader())
                     {
