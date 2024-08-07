@@ -134,7 +134,7 @@ StoreIDを元にリストを検索するやつ。最初これを条件式にフ�
 ```
 保留にしてる(Status=0)の値を取得してリストにして渡すメゾットこれでよかったんだよこれで…誰だよ複雑な内容書きしたためたあんぽんたんは
 
-## Interfaces/IStaffRequestDataAccess.cs
+## Interfaces/IStaffDataAccess.cs
 ```csharp
 using shift_making_man.Models;
 using System.Collections.Generic;
