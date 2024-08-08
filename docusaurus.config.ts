@@ -305,6 +305,9 @@ const config: Config = {
 
 export default
 {
+  title: 'STEMASK Docs',
+  url: 'https://ask-stem-official.github.io',
+  baseUrl: '/stemask-docs/',
   themeConfig: {
     prism: {
       additionalLanguages: ['charp'],
