@@ -299,18 +299,9 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+      additionalLanguages: ['csharp'],
     },
   } satisfies Preset.ThemeConfig,
 };
 
-export default
-{
-  title: 'STEMASK Docs',
-  url: 'https://ask-stem-official.github.io',
-  baseUrl: '/stemask-docs/',
-  themeConfig: {
-    prism: {
-      additionalLanguages: ['charp'],
-    },
-  },
-};
+export default config;
