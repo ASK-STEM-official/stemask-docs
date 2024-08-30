@@ -9,7 +9,7 @@ tags: [GitHub,豆知識]
 
 ## GitHub Educationって何?
 
-GitHub EducationはGithubの学生限定プランです(そのまんま)。
+GitHub EducationはGitHubの学生限定プランです(そのまんま)。
 
 ## GitHub Educationの何がいいの？
 
