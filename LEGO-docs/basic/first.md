@@ -85,9 +85,10 @@ int main(void)
 
     return 0;
 }
-    
 ```
+
 出力結果
+
 ```
 v:10
 ```
