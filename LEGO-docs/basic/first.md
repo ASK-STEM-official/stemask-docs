@@ -72,7 +72,7 @@ int/floatにすることで、計算結果をfloat型にすることができる
 
 #### サンプルコード
 ```c
-#include <stdio.h>
+#include \<stdio.h\>
 int main(void)
 {
     // int型の配列dataで保存できる要素は10、すべての要素に0を初期値として代入
