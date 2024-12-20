@@ -72,7 +72,7 @@ int/floatにすることで、計算結果をfloat型にすることができる
 
 #### サンプルコード
 ```c
-#include \<stdio.h\>
+#include \<stdio.h \>
 int main(void)
 {
     // int型の配列dataで保存できる要素は10、すべての要素に0を初期値として代入
@@ -114,7 +114,7 @@ C言語は命令を関数で呼び出す。たとえばprintf("%d\n",a);のよ�
 
 ### サンプルコード
 ```c
-#include \<stdio.h\>
+#include \<stdio.h \>
 // 関数の定義
 int add(int a, int b);
 
