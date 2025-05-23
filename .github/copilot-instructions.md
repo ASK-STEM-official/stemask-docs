@@ -12,7 +12,7 @@
 ## Copilot Behaviors
 Copilot は以下の方針に従って補完してください：
 
-### docusaurus.config.jsの補完
+### docusaurus.config.tsの補完
 #### 新しくカテゴリを作成した場合、``docusaurus.config.js``にカテゴリを追加してください。
 - pluginsの配列に以下の形式でカテゴリの登録を行います
     ```JavaScript
