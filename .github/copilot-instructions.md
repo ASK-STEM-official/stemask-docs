@@ -5,7 +5,7 @@
 
 ## Coding Conventions
 - 使用言語: TypeScript, markdown
-- フレームワーク: React18.0によって記述されたDocusaurus3.0.0
+- フレームワーク: Docusaurus 3.0.0 (React 18.0 上に構築)
 - buildツール: Node.js v20.11.0
 - GitHubActionsでビルドしてGitHubPagesにデプロイ
 
@@ -13,9 +13,9 @@
 Copilot は以下の方針に従って補完してください：
 
 ### docusaurus.config.tsの補完
-#### 新しくカテゴリを作成した場合、``docusaurus.config.js``にカテゴリを追加してください。
+#### 新しくカテゴリを作成した場合、``docusaurus.config.ts``にカテゴリを追加してください。
 - pluginsの配列に以下の形式でカテゴリの登録を行います
-    ```JavaScript
+    ```TypeScript
         [
             '@docusaurus/plugin-content-docs',
             {
@@ -23,13 +23,13 @@ Copilot は以下の方針に従って補完してください：
                 path: '新規作成したフォルダ名',
                 routeBasePath: '新規作成したフォルダ名',
                 sidebarPath: require.resolve('./sidebars.js'),
-                editUrl: 'https://github.com/ootomonaiso/ootomonaiso_strage',
+                editUrl: 'https://github.com/ASK-STEM-official/stemask-docs/tree/main/',
             },
         ],
     ``` 
     
 - themeConfigのitems配下に以下の形式でカテゴリの登録を行います
-    ```JavaScript
+    ```TypeScript
         {
             to: '/新規作成したフォルダ名/intro',
             position: 'left',
@@ -38,7 +38,7 @@ Copilot は以下の方針に従って補完してください：
     ```
 
 - footerのlinks配下に以下の形式でカテゴリの登録を行います
-    ```JavaScript
+    ```TypeScript
         {
             label: '業務用ITソフトウェア',
             to: '/IT_gyoumu/intro',
