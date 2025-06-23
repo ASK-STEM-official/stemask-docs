@@ -133,6 +133,17 @@ const config: Config = {
         // ... other options
       },
     ],
+        [//ここのかっこで括られている部分をコピペして設定
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'NetWork',
+        path: 'NetWork',
+        routeBasePath: 'NetWork',
+        sidebarPath: './sidebars.ts',//サイドバーパス
+        editUrl: 'https://github.com/ASK-STEM-official/stemask-docs/tree/main/',//編集用メニューの遷移先URL
+        // ... other options
+      },
+    ],
   ],
 
   themeConfig: {
@@ -182,6 +193,11 @@ const config: Config = {
           to: "/LEGO-docs/intro",
           position: 'left',
           label: 'LEGOロボット',
+        },
+        {
+          to: "/NetWork/intro",
+          position: 'left',
+          label: 'NetWork',
         },
         {
           to: "/git/intro",
