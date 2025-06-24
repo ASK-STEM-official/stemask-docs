@@ -1,6 +1,6 @@
 ---
 sidebar_position: 4
-description: dinamic NATの構築
+description: dynamic NATの構築
 ---
 
 # 動的NATの構築
@@ -53,10 +53,10 @@ interface eth0/1
  ip nat outside
 ```
 
-## dinamicNAT
+## dynamicNAT
 ```bash
 enable 
-configre terminal
+configure terminal
 ip nat pool dynamic1 100.1.1.10 100.1.1.20 netmask 255.255.255.0
 ip nat inside source list 1 pool dynamic1
 ```
