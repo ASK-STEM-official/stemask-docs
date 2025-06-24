@@ -64,7 +64,7 @@ clock timezone JST +9
 hostname "ここにホストネームを指定"
 ```
 
-## 常にenabke
+## 常にenable
 ```bash
 line console 0
 privilege level 15
