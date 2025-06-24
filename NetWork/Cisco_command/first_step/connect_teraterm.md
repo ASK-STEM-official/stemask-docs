@@ -1,10 +1,10 @@
 ---
 sidebar_position: 2
-description: TeratermからCMLへアクセス
+description: Tera TermからCMLへアクセス
 ---
 
-# Teratermを起動
-![Teratermの起動](./img/1-1.png)
+# Tera Termを起動
+![Tera Termの起動](./img/1-1.png)
 
 **ホスト**にIPアドレスを入力
 
