@@ -8,7 +8,7 @@ description: 外のネットワーク
 ### R1の設定(LAN内)
 ```bash
 enable
-configre terminal
+configure terminal
 
 interface eth0/0
     ip address 192.168.12.1 255.255.255.0
