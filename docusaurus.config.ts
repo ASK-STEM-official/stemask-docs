@@ -40,6 +40,8 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl: 'https://github.com/ASK-STEM-official/stemask-docs/tree/main/',
+          path: '01-docs',
+          routeBasePath: 'docs',
         },
         blog: {
           showReadingTime: true,
@@ -60,7 +62,7 @@ const config: Config = {
       '@docusaurus/plugin-content-docs',
       {
         id: 'unity-docs',
-        path: 'unity-docs',
+        path: '03-unity-docs',
         routeBasePath: 'unity-docs',
         sidebarPath: './sidebars.ts',//サイドバーパス
         editUrl: 'https://github.com/ASK-STEM-official/stemask-docs/tree/main/',//編集用メニューの遷移先URL
@@ -71,7 +73,7 @@ const config: Config = {
       '@docusaurus/plugin-content-docs',
       {
         id: 'IT-docs',
-        path: 'IT-docs',
+        path: '04-IT-docs',
         routeBasePath: 'IT-docs',
         sidebarPath: './sidebars.ts',
         editUrl: 'https://github.com/ASK-STEM-official/stemask-docs/tree/main/',//編集用メニューの遷移先URL
@@ -82,7 +84,7 @@ const config: Config = {
       '@docusaurus/plugin-content-docs',
       {
         id: 'web-docs',
-        path: 'web-docs',
+        path: '05-web-docs',
         routeBasePath: 'web-docs',
         sidebarPath: './sidebars.ts',
         editUrl: 'https://github.com/ASK-STEM-official/stemask-docs/tree/main/',//編集用メニューの遷移先URL
@@ -93,7 +95,7 @@ const config: Config = {
       '@docusaurus/plugin-content-docs',
       {
         id: 'beginners',
-        path: 'beginners',
+        path: '02-beginners',
         routeBasePath: 'beginners',
         sidebarPath: './sidebars.ts',
         editUrl: 'https://github.com/ASK-STEM-official/stemask-docs/tree/main/',//編集用メニューの遷移先URL
@@ -104,7 +106,7 @@ const config: Config = {
       '@docusaurus/plugin-content-docs',
       {
         id: 'git',
-        path: 'git',
+        path: '09-git',
         routeBasePath: 'git',
         sidebarPath: './sidebars.ts',
         editUrl: 'https://github.com/ASK-STEM-official/stemask-docs/tree/main/',//編集用メニューの遷移先URL
@@ -115,7 +117,7 @@ const config: Config = {
       '@docusaurus/plugin-content-docs',
       {
         id: 'ET-docs',
-        path: 'ET-docs',
+        path: '06-ET-docs',
         routeBasePath: 'ET-docs',
         sidebarPath: './sidebars.ts',
         editUrl: 'https://github.com/ASK-STEM-official/stemask-docs/tree/main/',//編集用メニューの遷移先URL
@@ -126,9 +128,20 @@ const config: Config = {
       '@docusaurus/plugin-content-docs',
       {
         id: 'LEGO-docs',
-        path: 'LEGO-docs',
+        path: '07-LEGO-docs',
         routeBasePath: 'LEGO-docs',
         sidebarPath: './sidebars.ts',
+        editUrl: 'https://github.com/ASK-STEM-official/stemask-docs/tree/main/',//編集用メニューの遷移先URL
+        // ... other options
+      },
+    ],
+        [//ここのかっこで括られている部分をコピペして設定
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'NetWork',
+        path: '08-NetWork',
+        routeBasePath: 'NetWork',
+        sidebarPath: './sidebars.ts',//サイドバーパス
         editUrl: 'https://github.com/ASK-STEM-official/stemask-docs/tree/main/',//編集用メニューの遷移先URL
         // ... other options
       },
@@ -182,6 +195,11 @@ const config: Config = {
           to: "/LEGO-docs/intro",
           position: 'left',
           label: 'LEGOロボット',
+        },
+        {
+          to: "/NetWork/intro",
+          position: 'left',
+          label: 'NetWork',
         },
         {
           to: "/git/intro",
