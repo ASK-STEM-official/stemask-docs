@@ -275,15 +275,15 @@ const config: Config = {
             },
             {
               label: 'HTMLのヒント',
-              to: '/web-docs/category/HTML関係',
+              to: '/web-docs/category/html関係',
             },
             {
               label: 'Japascriptのヒント',
-              to: '/web-docs/category/Javascript関係',
+              to: '/web-docs/category/javascript関係',
             },
             {
               label: 'CSSのヒント',
-              to: '/web-docs/category/CSS関係',
+              to: '/web-docs/category/css関係',
             },
           ]
         },
