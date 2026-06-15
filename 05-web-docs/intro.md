@@ -26,3 +26,5 @@ Webデザイン班のノウハウをまとめたドキュメントです。
 3. [HTML関係](./HTML/hints.md)
 4. [JavaScript関係](./javascript/aboutJS.md)
 5. [GitHub Pagesを使ってみよう](./github/intro.md)
+
+最終編集:2026-06-15 YGMS_yukkuri
