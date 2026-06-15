@@ -24,5 +24,5 @@ Webデザイン班のノウハウをまとめたドキュメントです。
 ## 目次
 1. [CSS関係](./CSS/intro.md)
 3. [HTML関係](./HTML/hints.md)
-4. [JS関係](./JS/intro.md)
+4. [JavaScript関係](./javascript/aboutJS.md)
 5. [GitHub Pagesを使ってみよう](./github/intro.md)
