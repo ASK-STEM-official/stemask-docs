@@ -269,6 +269,22 @@ const config: Config = {
               label: 'はじめに',
               to: '/web-docs/intro',
             },
+            {
+              label: 'よくあるミス',
+              to: '/web-docs/category/よくやりがちなミス',
+            },
+            {
+              label: 'HTMLのヒント',
+              to: '/web-docs/category/html関係',
+            },
+            {
+              label: 'Japascriptのヒント',
+              to: '/web-docs/category/javascript関係',
+            },
+            {
+              label: 'CSSのヒント',
+              to: '/web-docs/category/css関係',
+            },
           ]
         },
         {

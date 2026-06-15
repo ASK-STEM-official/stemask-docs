@@ -1,7 +1,21 @@
 {
   // This file is not used in compilation. It is here just for a nice editor experience.
-  "extends": "@docusaurus/tsconfig",
+  // NOTE: @docusaurus/tsconfig をそのまま継承すると、その中の "baseUrl" が
+  // TypeScript 6.0 以降で非推奨(TS5101, 7.0で廃止予定)となり警告が出る。
+  // そのため継承せず必要な設定をインライン化し、"baseUrl" の代わりに
+  // このファイル(プロジェクトルート)からの相対 "paths" で "@site/*" を解決する。
   "compilerOptions": {
-    "baseUrl": "."
+    "allowJs": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "moduleResolution": "bundler",
+    "module": "esnext",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@site/*": ["./*"]
+    }
   }
 }
